@@ -16,6 +16,13 @@ int main(void)
 
 	char operators[64];
 	int opIndex = 0;
+
+	char precedence[128];
+	precedence['*'] = 3;
+	precedence['/'] = 3;
+	precedence['+'] = 2;
+	precedence['-'] = 2;
+ 
 	while (fgets(buf, sizeof(buf), stdin)) {
 		advance = 0;
 		while (advance < strlen(buf) && sscanf(&buf[advance], "%s", &token)) {
@@ -30,7 +37,7 @@ int main(void)
 					printf(" %c", operators[opIndex]);
 			} else {
 				/* Assumed to be an operator */
-				while (opIndex > 0 && operators[opIndex-1] != '(')
+				while (opIndex > 0 && precedence[operators[opIndex-1]] >= precedence[token[0]] && operators[opIndex-1] != '(')
 					printf(" %c", operators[--opIndex]);
 				operators[opIndex++] = token[0];
 			}
